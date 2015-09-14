@@ -5,8 +5,12 @@
 {-# LANGUAGE DataKinds                  #-}
 ------------------------------------------------------------------------------
 module Web.Google.Translate
-       ( -- * Types
-         Key                 (..)
+       ( -- * Functions
+         detect
+       , getLanguages
+       , translate
+         -- * Types
+       , Key                 (..)
        , Source              (..)
        , Target              (..)
        , Body                (..)
@@ -21,10 +25,6 @@ module Web.Google.Translate
        , LanguageResponse    (..)
        , LanguageName        (..)
        , Language            (..)
-         -- * Functions
-       , detect
-       , getLanguages
-       , translate
        ) where
 ------------------------------------------------------------------------------
 import           Control.Monad.Trans.Either
