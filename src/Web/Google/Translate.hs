@@ -35,6 +35,7 @@ module Web.Google.Translate
        , Language            (..)
        ) where
 ------------------------------------------------------------------------------
+import           Control.Applicative
 import           Control.Monad.Trans.Either
 import           Data.Aeson
 import           Data.Aeson.Types
