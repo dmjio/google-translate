@@ -4,7 +4,7 @@ google-translate
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/google-translate.svg)
 ![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)
 ![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)
-![Build Status](https://img.shields.io/circleci/project/dmjio/stripe-haskell.svg)
+![Build Status](https://img.shields.io/circleci/project/dmjio/google-translate.svg)
 
 High-level, up-to-date bindings to the Google Translate API.
 ```haskell
