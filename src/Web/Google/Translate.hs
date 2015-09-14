@@ -4,6 +4,14 @@
 {-# LANGUAGE TypeOperators              #-}
 {-# LANGUAGE DataKinds                  #-}
 ------------------------------------------------------------------------------
+-- |
+-- Module      : Web.Google.Translate
+-- Copyright   : (c) David Johnson 2015
+-- Maintainer  : djohnson.m@gmail.com
+-- Stability   : experimental
+-- Portability : POSIX
+--
+------------------------------------------------------------------------------
 module Web.Google.Translate
        ( -- * Functions
          detect
@@ -112,7 +120,7 @@ instance FromJSON LanguageResponse where
 ------------------------------------------------------------------------------
 -- | Language 
 data Language = Language {
-     lang :: Text
+     lang :: Lang
    , name :: Maybe LanguageName
   } deriving (Show, Eq, Generic, Ord)
 ------------------------------------------------------------------------------
