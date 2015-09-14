@@ -9,26 +9,7 @@ copyright:           David Johnson (c) 2016
 category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
-description:
-  . 
-  >  import Control.Monad
-  >  import qualified Data.Text.IO as T
-  >  import Data.Maybe
-  >  import Web.Google.Translate
-  > 
-  >
-  >  main :: IO ()
-  >  main = do
-  >    Right TranslationResponse { translations = xs } <-
-  >      translate (Key "<API-Key>") (Just srcLang) trgLang (Body "Hello")
-  >    forM_ xs $ \Translation { translatedText = TranslatedText txt } ->
-  >      T.putStrLn txt
-  >    where
-  >      srcLang = Source English
-  >      trgLang = Target Russian
-  >      
-  >  -- >>> Здравствуйте  
-  .
+description:         Google Translate Library
 library
   exposed-modules:     Web.Google.Translate
   hs-source-dirs:      src
