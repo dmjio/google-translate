@@ -20,8 +20,8 @@ description:
   >  main :: IO ()
   >  main = do
   >    Right TranslationResponse { translations = xs } <-
-  >      translate (Key "<API-Key>") (Just srcLang) trgLang (Body "nice to meet you")
-  >    forM_ xs $ \Translation { translatedText = TranslatedText txt } -&lr
+  >      translate (Key "<API-Key>") (Just srcLang) trgLang (Body "Hello")
+  >    forM_ xs $ \Translation { translatedText = TranslatedText txt } ->
   >      T.putStrLn txt
   >    where
   >      srcLang = Source English

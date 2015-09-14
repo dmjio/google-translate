@@ -10,7 +10,7 @@ import Web.Google.Translate
 main :: IO ()
 main = do
   Right TranslationResponse { translations = xs } <-
-    translate (Key "<API-Key>") (Just srcLang) trgLang (Body "nice to meet you")
+    translate (Key "<API-Key>") (Just srcLang) trgLang (Body "Hello")
   forM_ xs $ \Translation { translatedText = TranslatedText txt } ->
     T.putStrLn txt
   where
