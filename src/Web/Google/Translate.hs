@@ -29,6 +29,7 @@ module Web.Google.Translate
 ------------------------------------------------------------------------------
 import           Control.Monad.Trans.Either
 import           Data.Aeson
+import           Data.Aeson.Types
 import           Data.Proxy
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -36,21 +37,27 @@ import           GHC.Generics
 import           Servant.API
 import           Servant.Client
 ------------------------------------------------------------------------------
+-- | API Key
 newtype Key = Key Text
   deriving (ToText, FromText, Show, Eq, Ord)
 ------------------------------------------------------------------------------
-newtype Source = Source Text
+-- | Source Language
+newtype Source = Source Lang
   deriving (ToText, FromText, Show, Eq, Ord)
 ------------------------------------------------------------------------------
-newtype Target = Target Text
+-- | Target Language
+newtype Target = Target Lang
   deriving (ToText, FromText, Show, Eq, Ord)
 ------------------------------------------------------------------------------
+-- | Text for translation
 newtype Body = Body Text
   deriving (ToText, FromText, Show, Eq, Ord)
 ------------------------------------------------------------------------------
+-- | Translated Text
 newtype TranslatedText = TranslatedText Text
   deriving (ToText, FromText, Show, Eq, Ord, FromJSON)
 ------------------------------------------------------------------------------
+-- | Translation Reponse
 data TranslationResponse = TranslationResponse {
     translations :: [ Translation ]
   } deriving (Show, Eq, Ord, Generic)
@@ -60,6 +67,7 @@ instance FromJSON TranslationResponse where
     d <- o .: "data"
     TranslationResponse <$> d .: "translations"
 ------------------------------------------------------------------------------
+-- | Translation 
 data Translation = Translation {
     translatedText :: TranslatedText
   , detectedSourceLanguage :: Maybe Lang
@@ -67,6 +75,7 @@ data Translation = Translation {
 ------------------------------------------------------------------------------
 instance FromJSON Translation
 ------------------------------------------------------------------------------
+-- | Deletion Response
 data DetectionResponse = DetectionResponse {
      detections :: [ [Detection] ]
   } deriving (Show, Eq, Ord, Generic)
@@ -76,18 +85,22 @@ instance FromJSON DetectionResponse where
     d <- o .: "data"
     DetectionResponse <$> d .: "detections"
 ------------------------------------------------------------------------------
+-- | Detection
 data Detection = Detection {
     language   :: Lang
   , isReliable :: IsReliable
   , confidence :: Confidence
   } deriving (Show, Eq, Generic, Ord)
 ------------------------------------------------------------------------------
+-- | Confidence
 newtype Confidence = Confidence Double deriving (Show, Eq, Ord, FromJSON)
 ------------------------------------------------------------------------------
+-- | IsReliable
 newtype IsReliable = IsReliable Bool deriving (Show, Eq, Ord, FromJSON)
 ------------------------------------------------------------------------------
 instance FromJSON Detection
 ------------------------------------------------------------------------------
+-- | Language Response
 data LanguageResponse = LanguageResponse {
      languages :: [Language]
   } deriving (Show, Eq, Ord, Generic)
@@ -97,6 +110,7 @@ instance FromJSON LanguageResponse where
     d <- o .: "data"
     LanguageResponse <$> d .: "languages"
 ------------------------------------------------------------------------------
+-- | Language 
 data Language = Language {
      lang :: Text
    , name :: Maybe LanguageName
@@ -105,8 +119,10 @@ data Language = Language {
 instance FromJSON Language where
   parseJSON (Object o) = Language <$> o .: "language" <*> o .:? "name"
 ------------------------------------------------------------------------------
+-- | Language Name
 newtype LanguageName = LanguageName Text deriving (Show, Eq, Ord, FromJSON)
 ------------------------------------------------------------------------------
+-- | Google Translate API
 type API = "language"
         :> "translate"
         :> "v2"
@@ -177,98 +193,99 @@ toTxt :: Show a => a -> Text
 toTxt = T.pack . show 
 ------------------------------------------------------------------------------
 instance Show Lang where
-  show Afrikaans = "af"
-  show Albanian = "sq"
-  show Arabic = "ar"
-  show Armenian = "hy"
-  show Azerbaijani = "az"
-  show Basque = "eu"
-  show Belarusian = "be"
-  show Bengali = "bn"
-  show Bosnian = "bs"
-  show Bulgarian = "bg"
-  show Catalan = "ca"
-  show Cebuano = "ceb"
-  show Chichewa = "ny"
-  show ChineseSimplified = "zh"
+  show Afrikaans          = "af"
+  show Albanian           = "sq"
+  show Arabic             = "ar"
+  show Armenian           = "hy"
+  show Azerbaijani        = "az"
+  show Basque             = "eu"
+  show Belarusian         = "be"
+  show Bengali            = "bn"
+  show Bosnian            = "bs"
+  show Bulgarian          = "bg"
+  show Catalan            = "ca"
+  show Cebuano            = "ceb"
+  show Chichewa           = "ny"
+  show ChineseSimplified  = "zh"
   show ChineseTraditional = "zh-TW"
-  show Croatian = "hr"
-  show Czech = "cs"
-  show Danish = "da"
-  show Dutch = "nl"
-  show English = "en"
-  show Esperanto = "eo"
-  show Estonian = "et"
-  show Filipino = "tl"
-  show Finnish = "fi"
-  show French = "fr"
-  show Galician = "gl"
-  show Georgian = "ka"
-  show German = "de"
-  show Greek = "el"
-  show Gujarati = "gu"
-  show HaitianCreole = "ht"
-  show Hausa = "ha"
-  show Hebrew = "iw"
-  show Hindi = "hi"
-  show Hmong = "hmn"
-  show Hungarian = "hu"
-  show Icelandic = "is"
-  show Igbo = "ig"
-  show Indonesian = "id"
-  show Irish = "ga"
-  show Italian = "it"
-  show Japanese = "ja"
-  show Javanese = "jw"
-  show Kannada = "kn"
-  show Kazakh = "kk"
-  show Khmer = "km"
-  show Korean = "ko"
-  show Lao = "lo"
-  show Latin = "la"
-  show Latvian = "lv"
-  show Lithuanian = "lt"
-  show Macedonian = "mk"
-  show Malagasy = "mg"
-  show Malay = "ms"
-  show Malayalam = "ml"
-  show Maltese = "mt"
-  show Maori = "mi"
-  show Marathi = "mr"
-  show Mongolian = "mn"
-  show MyanmarBurmese = "my"
-  show Nepali = "ne"
-  show Norwegian = "no"
-  show Persian = "fa"
-  show Polish = "pl"
-  show Portuguese = "pt"
-  show Punjabi = "pa"
-  show Romanian = "ro"
-  show Russian = "ru"
-  show Serbian = "sr"
-  show Sesotho = "st"
-  show Sinhala = "si"
-  show Slovak = "sk"
-  show Slovenian = "sl"
-  show Somali = "so"
-  show Spanish = "es"
-  show Sundanese = "su"
-  show Swahili = "sw"
-  show Swedish = "sv"
-  show Tajik = "tg"
-  show Tamil = "ta"
-  show Telugu = "te"
-  show Thai = "th"
-  show Turkish = "tr"
-  show Ukrainian = "uk"
-  show Urdu = "ur"
-  show Uzbek = "uz"
-  show Vietnamese = "vi"
-  show Welsh = "cy"
-  show Yiddish = "yi"
-  show Yoruba = "yo"
-  show Zulu = "zu"
+  show Croatian           = "hr"
+  show Czech              = "cs"
+  show Danish             = "da"
+  show Dutch              = "nl"
+  show English            = "en"
+  show Esperanto          = "eo"
+  show Estonian           = "et"
+  show Filipino           = "tl"
+  show Finnish            = "fi"
+  show French             = "fr"
+  show Galician           = "gl"
+  show Georgian           = "ka"
+  show German             = "de"
+  show Greek              = "el"
+  show Gujarati           = "gu"
+  show HaitianCreole      = "ht"
+  show Hausa              = "ha"
+  show Hebrew             = "iw"
+  show Hindi              = "hi"
+  show Hmong              = "hmn"
+  show Hungarian          = "hu"
+  show Icelandic          = "is"
+  show Igbo               = "ig"
+  show Indonesian         = "id"
+  show Irish              = "ga"
+  show Italian            = "it"
+  show Japanese           = "ja"
+  show Javanese           = "jw"
+  show Kannada            = "kn"
+  show Kazakh             = "kk"
+  show Khmer              = "km"
+  show Korean             = "ko"
+  show Lao                = "lo"
+  show Latin              = "la"
+  show Latvian            = "lv"
+  show Lithuanian         = "lt"
+  show Macedonian         = "mk"
+  show Malagasy           = "mg"
+  show Malay              = "ms"
+  show Malayalam          = "ml"
+  show Maltese            = "mt"
+  show Maori              = "mi"
+  show Marathi            = "mr"
+  show Mongolian          = "mn"
+  show MyanmarBurmese     = "my"
+  show Nepali             = "ne"
+  show Norwegian          = "no"
+  show Persian            = "fa"
+  show Polish             = "pl"
+  show Portuguese         = "pt"
+  show Punjabi            = "pa"
+  show Romanian           = "ro"
+  show Russian            = "ru"
+  show Serbian            = "sr"
+  show Sesotho            = "st"
+  show Sinhala            = "si"
+  show Slovak             = "sk"
+  show Slovenian          = "sl"
+  show Somali             = "so"
+  show Spanish            = "es"
+  show Sundanese          = "su"
+  show Swahili            = "sw"
+  show Swedish            = "sv"
+  show Tajik              = "tg"
+  show Tamil              = "ta"
+  show Telugu             = "te"
+  show Thai               = "th"
+  show Turkish            = "tr"
+  show Ukrainian          = "uk"
+  show Urdu               = "ur"
+  show Uzbek              = "uz"
+  show Vietnamese         = "vi"
+  show Welsh              = "cy"
+  show Yiddish            = "yi"
+  show Yoruba             = "yo"
+  show Zulu               = "zu"
 ------------------------------------------------------------------------------
+-- | Languages for translation
 data Lang =
     Afrikaans
   | Albanian
@@ -363,8 +380,13 @@ data Lang =
   | Zulu
   deriving (Eq, Ord)
 ------------------------------------------------------------------------------
-instance ToText Lang where
-  toText = toTxt
+instance ToText Lang where toText = toTxt
+------------------------------------------------------------------------------
+instance FromText Lang where
+  fromText txt =
+    case fromJSON (String txt) of
+     Success x -> Just x
+     _         -> Nothing
 ------------------------------------------------------------------------------
 instance FromJSON Lang where
   parseJSON (String "af") = pure Afrikaans
