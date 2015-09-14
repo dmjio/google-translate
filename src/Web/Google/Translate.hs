@@ -77,7 +77,7 @@ instance FromJSON DetectionResponse where
     DetectionResponse <$> d .: "detections"
 ------------------------------------------------------------------------------
 data Detection = Detection {
-    language   :: Text
+    language   :: Lang
   , isReliable :: IsReliable
   , confidence :: Confidence
   } deriving (Show, Eq, Generic, Ord)
