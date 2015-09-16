@@ -1,3 +1,7 @@
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE StandaloneDeriving         #-}
+{-# LANGUAGE GADTs                      #-}
+{-# LANGUAGE KindSignatures             #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -17,6 +21,9 @@ module Web.Google.Translate
          detect
        , getLanguages
        , translate
+         -- * API
+       , GoogleTranslateAPI
+       , api
          -- * Types
        , Key                 (..)
        , Source              (..)
@@ -39,10 +46,12 @@ import           Control.Applicative
 import           Control.Monad.Trans.Either
 import           Data.Aeson
 import           Data.Aeson.Types
+import           Data.Maybe
 import           Data.Proxy
 import           Data.Text (Text)
 import qualified Data.Text as T
 import           GHC.Generics
+import           GHC.TypeLits
 import           Servant.API
 import           Servant.Client
 ------------------------------------------------------------------------------
@@ -132,7 +141,7 @@ instance FromJSON Language where
 newtype LanguageName = LanguageName Text deriving (Show, Eq, Ord, FromJSON)
 ------------------------------------------------------------------------------
 -- | Google Translate API
-type API = "language"
+type GoogleTranslateAPI = "language"
         :> "translate"
         :> "v2"
         :> QueryParam "key" Key
@@ -140,16 +149,14 @@ type API = "language"
         :> QueryParam "target" Target
         :> QueryParam "q" Body
         :> Get '[JSON] TranslationResponse
-        :<|>
-           "language"
+        :<|> "language"
         :> "translate"
         :> "v2"
         :> "detect"
         :> QueryParam "key" Key
         :> QueryParam "q" Body
         :> Get '[JSON] DetectionResponse
-        :<|>
-           "language"
+        :<|> "language"
         :> "translate"
         :> "v2"
         :> "languages"
@@ -157,7 +164,7 @@ type API = "language"
         :> QueryParam "target" Target
         :> Get '[JSON] LanguageResponse
 ------------------------------------------------------------------------------
-api :: Proxy API
+api :: Proxy GoogleTranslateAPI
 api = Proxy
 ------------------------------------------------------------------------------
 translate'
