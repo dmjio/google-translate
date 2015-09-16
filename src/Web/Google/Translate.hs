@@ -84,7 +84,7 @@ data Translation = Translation {
 ------------------------------------------------------------------------------
 instance FromJSON Translation
 ------------------------------------------------------------------------------
--- | Deletion Response
+-- | Detection Response
 data DetectionResponse = DetectionResponse {
      detections :: [ [Detection] ]
   } deriving (Show, Eq, Ord, Generic)
