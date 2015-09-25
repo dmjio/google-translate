@@ -1,5 +1,5 @@
 name:                google-translate
-version:             0.1.1.1
+version:             0.1.1.2
 synopsis:            Google Translate API bindings
 license:             BSD3
 license-file:        LICENSE
@@ -10,6 +10,10 @@ category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
 description:         Google Translate Library
+
+extra-source-files:
+    README.md
+
 library
   exposed-modules:     Web.Google.Translate
   hs-source-dirs:      src
