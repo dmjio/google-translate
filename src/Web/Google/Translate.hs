@@ -496,6 +496,8 @@ instance FromJSON Lang where
   parseJSON (String "yi") = pure Yiddish
   parseJSON (String "yo") = pure Yoruba
   parseJSON (String "zu") = pure Zulu
+  parseJSON (String _)    = fail "Unknown language code"
+  parseJSON  _            = fail "Expecting language code as a JSON string"
 ------------------------------------------------------------------------------
 instance ToJSON Lang where
   toJSON = String . toTxt
