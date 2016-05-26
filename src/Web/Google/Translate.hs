@@ -43,7 +43,7 @@ module Web.Google.Translate
        ) where
 ------------------------------------------------------------------------------
 import           Control.Applicative
-import           Control.Monad.Trans.Either
+import           Control.Monad.Trans.Except
 import           Data.Aeson
 import           Data.Aeson.Types
 import           Data.Maybe
@@ -52,28 +52,30 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 import           GHC.Generics
 import           GHC.TypeLits
+import           Network.HTTP.Client (Manager)
 import           Servant.API
 import           Servant.Client
+import           Web.HttpApiData
 ------------------------------------------------------------------------------
 -- | API Key
 newtype Key = Key Text
-  deriving (ToText, FromText, Show, Eq, Ord)
+  deriving (ToHttpApiData, FromHttpApiData, Show, Eq, Ord)
 ------------------------------------------------------------------------------
 -- | Source Language
 newtype Source = Source Lang
-  deriving (ToText, FromText, Show, Eq, Ord)
+  deriving (ToHttpApiData, Show, Eq, Ord)
 ------------------------------------------------------------------------------
 -- | Target Language
 newtype Target = Target Lang
-  deriving (ToText, FromText, Show, Eq, Ord)
+  deriving (ToHttpApiData, Show, Eq, Ord)
 ------------------------------------------------------------------------------
 -- | Text for translation
 newtype Body = Body Text
-  deriving (ToText, FromText, Show, Eq, Ord)
+  deriving (ToHttpApiData, FromHttpApiData, Show, Eq, Ord)
 ------------------------------------------------------------------------------
 -- | Translated Text
 newtype TranslatedText = TranslatedText Text
-  deriving (ToText, FromText, Show, Eq, Ord, FromJSON)
+  deriving (ToHttpApiData, FromHttpApiData, Show, Eq, Ord, FromJSON)
 ------------------------------------------------------------------------------
 -- | Translation Reponse
 data TranslationResponse = TranslationResponse {
@@ -172,41 +174,49 @@ translate'
   -> Maybe Source
   -> Maybe Target
   -> Maybe Body
-  -> EitherT ServantError IO TranslationResponse
+  -> Manager
+  -> BaseUrl
+  -> ExceptT ServantError IO TranslationResponse
 detect'
   :: Maybe Key
   -> Maybe Body
-  -> EitherT ServantError IO DetectionResponse
-translate' :<|> detect' :<|> getLanguages' = client api (BaseUrl Https "www.googleapis.com" 443)
+  -> Manager
+  -> BaseUrl
+  -> ExceptT ServantError IO DetectionResponse
+translate' :<|> detect' :<|> getLanguages' = client api
+------------------------------------------------------------------------------
+googleApis :: BaseUrl
+googleApis = BaseUrl Https "www.googleapis.com" 443 "/"
 ------------------------------------------------------------------------------
 -- | Detect target language
 detect
-  :: Key
+  :: Manager
+  -> Key
   -> Body
   -> IO (Either ServantError DetectionResponse)
-detect key body = runEitherT $ detect' (Just key) (Just body)
+detect mgr key body = runExceptT $ detect' (Just key) (Just body) mgr googleApis
 ------------------------------------------------------------------------------
 -- | Perform translation from `Source` language to `Target` langauge.
 -- If `Source` not specified, attempt detection of `Lang`
 translate
-  :: Key
+  :: Manager
+  -> Key
   -> Maybe Source
   -> Target
   -> Body
   -> IO (Either ServantError TranslationResponse)
-translate key src trgt body =
-  runEitherT $ translate' (Just key) src (Just trgt) (Just body)
+translate mgr key src trgt body =
+  runExceptT $ translate' (Just key) src (Just trgt) (Just body) mgr googleApis
 ------------------------------------------------------------------------------
 -- | Retrieve all languages
 -- If `Target` specified, return langauge name in `Target` langauge.
 getLanguages 
-  :: Key
+  :: Manager
+  -> Key
   -> Maybe Target
   -> IO (Either ServantError LanguageResponse)
-getLanguages key trgt = runEitherT $ getLanguages' (Just key) trgt
-------------------------------------------------------------------------------
-toTxt :: Show a => a -> Text
-toTxt = T.pack . show 
+getLanguages mgr key trgt =
+  runExceptT $ getLanguages' (Just key) trgt mgr googleApis
 ------------------------------------------------------------------------------
 instance Show Lang where
   show Afrikaans          = "af"
@@ -396,13 +406,8 @@ data Lang =
   | Zulu
   deriving (Eq, Ord)
 ------------------------------------------------------------------------------
-instance ToText Lang where toText = toTxt
-------------------------------------------------------------------------------
-instance FromText Lang where
-  fromText txt =
-    case fromJSON (String txt) of
-     Success x -> Just x
-     _         -> Nothing
+instance ToHttpApiData Lang where
+  toUrlPiece = T.pack . show
 ------------------------------------------------------------------------------
 instance FromJSON Lang where
   parseJSON (String "af") = pure Afrikaans
@@ -500,6 +505,6 @@ instance FromJSON Lang where
   parseJSON  _            = fail "Expecting language code as a JSON string"
 ------------------------------------------------------------------------------
 instance ToJSON Lang where
-  toJSON = String . toTxt
+  toJSON = String . toUrlPiece
 
 
