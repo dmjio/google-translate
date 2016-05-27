@@ -1,7 +1,5 @@
 {-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE StandaloneDeriving         #-}
 {-# LANGUAGE GADTs                      #-}
-{-# LANGUAGE KindSignatures             #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -45,17 +43,13 @@ module Web.Google.Translate
 import           Control.Applicative
 import           Control.Monad.Trans.Except
 import           Data.Aeson
-import           Data.Aeson.Types
-import           Data.Maybe
 import           Data.Proxy
 import           Data.Text (Text)
 import qualified Data.Text as T
 import           GHC.Generics
-import           GHC.TypeLits
 import           Network.HTTP.Client (Manager)
 import           Servant.API
 import           Servant.Client
-import           Web.HttpApiData
 ------------------------------------------------------------------------------
 -- | API Key
 newtype Key = Key Text
