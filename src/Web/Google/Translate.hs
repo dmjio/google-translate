@@ -87,7 +87,7 @@ instance FromJSON TranslationResponse where
     d <- o .: "data"
     TranslationResponse <$> d .: "translations"
 ------------------------------------------------------------------------------
--- | Translation 
+-- | Translation
 data Translation = Translation {
     translatedText :: TranslatedText
   , detectedSourceLanguage :: Maybe Lang
@@ -130,7 +130,7 @@ instance FromJSON LanguageResponse where
     d <- o .: "data"
     LanguageResponse <$> d .: "languages"
 ------------------------------------------------------------------------------
--- | Language 
+-- | Language
 data Language = Language {
      lang :: Lang
    , name :: Maybe LanguageName
@@ -210,7 +210,7 @@ translate mgr key src trgt body =
 ------------------------------------------------------------------------------
 -- | Retrieve all languages
 -- If `Target` specified, return langauge name in `Target` langauge.
-getLanguages 
+getLanguages
   :: Manager
   -> Key
   -> Maybe Target
@@ -506,5 +506,3 @@ instance FromJSON Lang where
 ------------------------------------------------------------------------------
 instance ToJSON Lang where
   toJSON = String . toUrlPiece
-
-
