@@ -1,9 +1,9 @@
 name:                google-translate
-version:             0.1.1.3
+version:             0.2
 synopsis:            Google Translate API bindings
 license:             BSD3
 license-file:        LICENSE
-author:              David Johnson
+author:              David Johnson, Dmitry Dzhus
 maintainer:          djohnson.m@gmail.com
 copyright:           David Johnson (c) 2016
 category:            Web
@@ -20,9 +20,11 @@ library
   build-depends:       aeson
                      , base           >= 4.7 && < 5
                      , bytestring     == 0.10.*
-                     , either         == 4.4.*
-                     , servant        == 0.4.*
-                     , servant-client == 0.4.*
+                     , transformers   >= 0.4 && < 0.6
+                     , http-api-data  == 0.2.*
+                     , http-client    == 0.4.*
+                     , servant        == 0.7.*
+                     , servant-client == 0.7.*
                      , text           == 1.2.*
   default-language:    Haskell2010
 
