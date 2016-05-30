@@ -1,2 +1,3 @@
 *.nix
 dist/
+.stack-work
