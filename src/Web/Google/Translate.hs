@@ -76,7 +76,7 @@ data TranslationResponse = TranslationResponse {
   } deriving (Show, Eq, Ord, Generic)
 ------------------------------------------------------------------------------
 instance FromJSON TranslationResponse where
-  parseJSON (Object o) = do
+  parseJSON = withObject "translations" $ \o -> do
     d <- o .: "data"
     TranslationResponse <$> d .: "translations"
 ------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ data DetectionResponse = DetectionResponse {
   } deriving (Show, Eq, Ord, Generic)
 ------------------------------------------------------------------------------
 instance FromJSON DetectionResponse where
-  parseJSON (Object o) = do
+  parseJSON = withObject "detetctions" $ \o -> do
     d <- o .: "data"
     DetectionResponse <$> d .: "detections"
 ------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ data LanguageResponse = LanguageResponse {
   } deriving (Show, Eq, Ord, Generic)
 ------------------------------------------------------------------------------
 instance FromJSON LanguageResponse where
-  parseJSON (Object o) = do
+  parseJSON = withObject "languages" $ \o -> do
     d <- o .: "data"
     LanguageResponse <$> d .: "languages"
 ------------------------------------------------------------------------------
@@ -130,7 +130,8 @@ data Language = Language {
   } deriving (Show, Eq, Generic, Ord)
 ------------------------------------------------------------------------------
 instance FromJSON Language where
-  parseJSON (Object o) = Language <$> o .: "language" <*> o .:? "name"
+  parseJSON = withObject "language" $ \o ->
+    Language <$> o .: "language" <*> o .:? "name"
 ------------------------------------------------------------------------------
 -- | Language Name
 newtype LanguageName = LanguageName Text deriving (Show, Eq, Ord, FromJSON)
