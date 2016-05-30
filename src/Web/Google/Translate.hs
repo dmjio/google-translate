@@ -1,4 +1,4 @@
-{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE PolyKinds                  #-}
 {-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE DeriveGeneric              #-}
@@ -8,7 +8,7 @@
 ------------------------------------------------------------------------------
 -- |
 -- Module      : Web.Google.Translate
--- Copyright   : (c) David Johnson 2015
+-- Copyright   : (c) David Johnson 2016
 -- Maintainer  : djohnson.m@gmail.com
 -- Stability   : experimental
 -- Portability : POSIX
@@ -40,7 +40,6 @@ module Web.Google.Translate
        , Language            (..)
        ) where
 ------------------------------------------------------------------------------
-import           Control.Applicative
 import           Control.Monad.Trans.Except
 import           Data.Aeson
 import           Data.Proxy
@@ -177,6 +176,12 @@ detect'
   -> Manager
   -> BaseUrl
   -> ExceptT ServantError IO DetectionResponse
+getLanguages'
+  :: Maybe Key
+  -> Maybe Target
+  -> Manager
+  -> BaseUrl
+  -> ExceptT ServantError IO LanguageResponse
 translate' :<|> detect' :<|> getLanguages' = client api
 ------------------------------------------------------------------------------
 googleApis :: BaseUrl
