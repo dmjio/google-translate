@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                        #-}
 {-# LANGUAGE PolyKinds                  #-}
 {-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE OverloadedStrings          #-}
@@ -168,25 +169,37 @@ translate'
   -> Maybe Source
   -> Maybe Target
   -> Maybe Body
+#if !(MIN_VERSION_servant_client(0,9,0))
   -> Manager
   -> BaseUrl
-  -> ExceptT ServantError IO TranslationResponse
+#endif
+  -> ClientM TranslationResponse
 detect'
   :: Maybe Key
   -> Maybe Body
+#if !(MIN_VERSION_servant_client(0,9,0))
   -> Manager
   -> BaseUrl
-  -> ExceptT ServantError IO DetectionResponse
+#endif
+  -> ClientM DetectionResponse
 getLanguages'
   :: Maybe Key
   -> Maybe Target
+#if !(MIN_VERSION_servant_client(0,9,0))
   -> Manager
   -> BaseUrl
-  -> ExceptT ServantError IO LanguageResponse
+#endif
+  -> ClientM LanguageResponse
 translate' :<|> detect' :<|> getLanguages' = client api
 ------------------------------------------------------------------------------
 googleApis :: BaseUrl
 googleApis = BaseUrl Https "www.googleapis.com" 443 "/"
+------------------------------------------------------------------------------
+-- compatability for servant-client 0.7 and 0.8:
+#if !(MIN_VERSION_servant_client(0,9,0))
+data ClientEnv = ClientEnv Manager BaseUrl
+runClientM a (ClientEnv mgr baseurl) = runExceptT (a mgr baseurl)
+#endif
 ------------------------------------------------------------------------------
 -- | Detect target language
 detect
@@ -194,7 +207,9 @@ detect
   -> Key
   -> Body
   -> IO (Either ServantError DetectionResponse)
-detect mgr key body = runExceptT $ detect' (Just key) (Just body) mgr googleApis
+detect mgr key body =
+  runClientM (detect' (Just key) (Just body))
+             (ClientEnv mgr googleApis)
 ------------------------------------------------------------------------------
 -- | Perform translation from `Source` language to `Target` langauge.
 -- If `Source` not specified, attempt detection of `Lang`
@@ -206,7 +221,8 @@ translate
   -> Body
   -> IO (Either ServantError TranslationResponse)
 translate mgr key src trgt body =
-  runExceptT $ translate' (Just key) src (Just trgt) (Just body) mgr googleApis
+  runClientM (translate' (Just key) src (Just trgt) (Just body))
+             (ClientEnv mgr googleApis)
 ------------------------------------------------------------------------------
 -- | Retrieve all languages
 -- If `Target` specified, return langauge name in `Target` langauge.
@@ -216,7 +232,8 @@ getLanguages
   -> Maybe Target
   -> IO (Either ServantError LanguageResponse)
 getLanguages mgr key trgt =
-  runExceptT $ getLanguages' (Just key) trgt mgr googleApis
+  runClientM (getLanguages' (Just key) trgt)
+             (ClientEnv mgr googleApis)
 ------------------------------------------------------------------------------
 instance Show Lang where
   show Afrikaans          = "af"
