@@ -198,6 +198,9 @@ googleApis = BaseUrl Https "www.googleapis.com" 443 "/"
 -- compatability for servant-client 0.7 and 0.8:
 #if !(MIN_VERSION_servant_client(0,9,0))
 data ClientEnv = ClientEnv Manager BaseUrl
+runClientM
+  :: (Manager -> BaseUrl -> ExceptT e m a)
+  -> ClientEnv -> m (Either e a)
 runClientM a (ClientEnv mgr baseurl) = runExceptT (a mgr baseurl)
 #endif
 ------------------------------------------------------------------------------

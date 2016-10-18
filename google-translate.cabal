@@ -1,5 +1,5 @@
 name:                google-translate
-version:             0.2
+version:             0.3
 synopsis:            Google Translate API bindings
 license:             BSD3
 license-file:        LICENSE
@@ -16,6 +16,7 @@ extra-source-files:
 
 library
   exposed-modules:     Web.Google.Translate
+  ghc-options: -Werror -Wall
   hs-source-dirs:      src
   build-depends:       aeson
                      , base           >= 4.7 && < 5
