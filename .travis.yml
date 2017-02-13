@@ -24,7 +24,7 @@ before_install:
  - nix-channel --update
 
 script:
- - nix-build -A google-translate compiler $GHCVER
+ - nix-build -A google-translate --argstr compiler $GHCVER
 
 cache:
   directories:
