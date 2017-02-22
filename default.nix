@@ -1,10 +1,10 @@
 { compiler ? "ghc802" }:
   let
    config = {
-     packageOverrides = pkgs: {
+     packageOverrides = pkgs: with pkgs.haskell.lib; {
        haskell.packages.${compiler} = pkgs.haskell.packages.${compiler}.override {
           overrides = self: super: rec {
-            google-translate = self.callPackage ./google-translate.nix { };
+            google-translate = buildStrictly (self.callPackage ./google-translate.nix { });
           };
         };
       };
