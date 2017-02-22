@@ -1,4 +1,5 @@
 { pkgs ? import <nixpkgs> {}, compiler ? "ghc802" }:
+with pkgs.haskell.lib;
 {
-   upload = pkgs.haskell.lib.sdistTarball (pkgs.haskell.packages.${compiler}.callPackage ./google-translate.nix {});
+   upload = sdistTarball (buildStrictly (pkgs.haskell.packages.${compiler}.callPackage ./google-translate.nix {}));
 }
