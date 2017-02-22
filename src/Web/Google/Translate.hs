@@ -41,11 +41,10 @@ module Web.Google.Translate
        , Language            (..)
        ) where
 ------------------------------------------------------------------------------
-import           Control.Monad.Trans.Except
 import           Data.Aeson
 import           Data.Proxy
-import           Data.Text (Text)
-import qualified Data.Text as T
+import           Data.Text           (Text)
+import qualified Data.Text           as T
 import           GHC.Generics
 import           Network.HTTP.Client (Manager)
 import           Servant.API
@@ -161,6 +160,7 @@ type GoogleTranslateAPI = "language"
         :> QueryParam "target" Target
         :> Get '[JSON] LanguageResponse
 ------------------------------------------------------------------------------
+-- | API type
 api :: Proxy GoogleTranslateAPI
 api = Proxy
 ------------------------------------------------------------------------------
