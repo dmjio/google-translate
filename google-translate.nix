@@ -3,7 +3,7 @@
 }:
 mkDerivation {
   pname = "google-translate";
-  version = "0.4";
+  version = "0.4.1";
   src = ./.;
   libraryHaskellDepends = [
     aeson base bytestring http-api-data http-client servant
