@@ -1,5 +1,5 @@
 name:                google-translate
-version:             0.4
+version:             0.4.1
 synopsis:            Google Translate API bindings
 license:             BSD3
 license-file:        LICENSE
