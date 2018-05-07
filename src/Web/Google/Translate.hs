@@ -9,7 +9,7 @@
 ------------------------------------------------------------------------------
 -- |
 -- Module      : Web.Google.Translate
--- Copyright   : (c) David Johnson 2016
+-- Copyright   : (c) David Johnson 2018
 -- Maintainer  : djohnson.m@gmail.com
 -- Stability   : experimental
 -- Portability : POSIX
@@ -212,7 +212,7 @@ detect
   -> IO (Either ServantError DetectionResponse)
 detect mgr key body =
   runClientM (detect' (Just key) (Just body))
-             (ClientEnv mgr googleApis)
+             (ClientEnv mgr googleApis Nothing)
 ------------------------------------------------------------------------------
 -- | Perform translation from `Source` language to `Target` langauge.
 -- If `Source` not specified, attempt detection of `Lang`
@@ -225,7 +225,7 @@ translate
   -> IO (Either ServantError TranslationResponse)
 translate mgr key src trgt body =
   runClientM (translate' (Just key) src (Just trgt) (Just body))
-             (ClientEnv mgr googleApis)
+             (ClientEnv mgr googleApis Nothing)
 ------------------------------------------------------------------------------
 -- | Retrieve all languages
 -- If `Target` specified, return langauge name in `Target` langauge.
@@ -236,7 +236,7 @@ getLanguages
   -> IO (Either ServantError LanguageResponse)
 getLanguages mgr key trgt =
   runClientM (getLanguages' (Just key) trgt)
-             (ClientEnv mgr googleApis)
+             (ClientEnv mgr googleApis Nothing)
 ------------------------------------------------------------------------------
 instance Show Lang where
   show Afrikaans          = "af"
