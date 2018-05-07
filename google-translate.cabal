@@ -9,7 +9,7 @@ copyright:           David Johnson (c) 2018
 category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
-description:         Google Translate Library
+description:         A Haskell library for the Google Translate service
 
 extra-source-files:
     README.md

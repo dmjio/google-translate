@@ -17,5 +17,5 @@
      let
        pkgs = import <nixpkgs> { inherit config; };
        google-translate = pkgs.haskell.packages.${compiler}.google-translate;
-     in { inherit google-translate; }
+     in google-translate
 
