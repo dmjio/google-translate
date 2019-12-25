@@ -209,7 +209,7 @@ detect
   :: Manager
   -> Key
   -> Body
-  -> IO (Either ServantError DetectionResponse)
+  -> IO (Either ClientError DetectionResponse)
 detect mgr key body =
   runClientM (detect' (Just key) (Just body))
              (ClientEnv mgr googleApis Nothing)
@@ -222,7 +222,7 @@ translate
   -> Maybe Source
   -> Target
   -> Body
-  -> IO (Either ServantError TranslationResponse)
+  -> IO (Either ClientError TranslationResponse)
 translate mgr key src trgt body =
   runClientM (translate' (Just key) src (Just trgt) (Just body))
              (ClientEnv mgr googleApis Nothing)
@@ -233,7 +233,7 @@ getLanguages
   :: Manager
   -> Key
   -> Maybe Target
-  -> IO (Either ServantError LanguageResponse)
+  -> IO (Either ClientError LanguageResponse)
 getLanguages mgr key trgt =
   runClientM (getLanguages' (Just key) trgt)
              (ClientEnv mgr googleApis Nothing)
