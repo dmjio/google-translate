@@ -193,7 +193,7 @@ getLanguages'
 translate' :<|> detect' :<|> getLanguages' = client api
 ------------------------------------------------------------------------------
 googleApis :: BaseUrl
-googleApis = BaseUrl Https "www.googleapis.com" 443 "/"
+googleApis = BaseUrl Https "translation.googleapis.com" 443 "/"
 ------------------------------------------------------------------------------
 -- compatability for servant-client 0.7 and 0.8:
 #if !(MIN_VERSION_servant_client(0,9,0))
