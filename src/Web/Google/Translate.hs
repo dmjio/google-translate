@@ -10,7 +10,7 @@
 -- |
 -- Module      : Web.Google.Translate
 -- Copyright   : (c) David Johnson 2018
--- Maintainer  : djohnson.m@gmail.com
+-- Maintainer  : code@dmj.io
 -- Stability   : experimental
 -- Portability : POSIX
 --
